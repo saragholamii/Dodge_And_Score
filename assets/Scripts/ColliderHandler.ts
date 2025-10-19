@@ -1,28 +1,40 @@
-import { _decorator, Component, Collider2D, IPhysics2DContact, BoxCollider2D } from 'cc';
+import { _decorator, Component, Collider2D, IPhysics2DContact, BoxCollider2D, Contact2DType, PhysicsSystem2D } from 'cc';
+import { GameManager } from './GameManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('ColliderHandler')
 export class ColliderHandler extends Component {
 
     onLoad() {
-        const collider = this.getComponent(BoxCollider2D);
+        const collider = this.getComponent(Collider2D);
         if (collider) {
-            collider.on('onCollisionEnter', this.onCollisionEnter, this);
-            collider.on('onCollisionStay', this.onCollisionStay, this);
-            collider.on('onCollisionExit', this.onCollisionExit, this);
+            collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
         }
+
+        // // Registering global contact callback functions
+        // if (PhysicsSystem2D.instance) {
+        //     PhysicsSystem2D.instance.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+        //     PhysicsSystem2D.instance.on(Contact2DType.END_CONTACT, this.onEndContact, this);
+        // }
     }
 
-    onCollisionEnter(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
-        console.log('Collision started with', otherCollider.node.name);
+    onBeginContact (selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
+        // will be called once when two colliders begin to contact
+        GameManager.instance.addScore(20, otherCollider);
     }
+    // onEndContact (selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
+    //     // will be called once when the contact between two colliders just about to end.
+    //     console.log('onEndContact');
+    // }
 
-    onCollisionStay(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
-        console.log('Collision ongoing with', otherCollider.node.name);
-    }
 
-    onCollisionExit(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
-        console.log('Collision ended with', otherCollider.node.name);
-    }
+    // onPreSolve (selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
+    //     // will be called every time collider contact should be resolved
+    //     console.log('onPreSolve');
+    // }
+    // onPostSolve (selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
+    //     // will be called every time collider contact should be resolved
+    //     console.log('onPostSolve');
+    // }
 }
 

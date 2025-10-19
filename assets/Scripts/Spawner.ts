@@ -45,7 +45,7 @@ export class Spawner extends Component {
 
     public setAnotherParent(spawnObject: Node) {
         if (this.UnderPlayerParent && spawnObject) {
-            //this.UnderPlayerParent.addChild(spawnObject);
+            this.UnderPlayerParent.addChild(spawnObject);
         }
     }
 }

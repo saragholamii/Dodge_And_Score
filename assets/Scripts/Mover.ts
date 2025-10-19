@@ -24,4 +24,5 @@ export class Mover extends Component {
             this.node.destroy();
         }
     }
+
 }
